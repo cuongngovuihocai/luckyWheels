@@ -1,6 +1,7 @@
 const KEYS = {
   OUTER: 'lucky_deleted_outer',
-  INNER: 'lucky_deleted_inner'
+  INNER: 'lucky_deleted_inner',
+  EXTRA: 'lucky_deleted_extra'
 };
 
 // Hàm hỗ trợ đọc/ghi LocalStorage an toàn
@@ -51,9 +52,25 @@ export const deletedItemsService = {
     localStorage.removeItem(KEYS.INNER);
   },
 
+  // --- VÒNG THỨ 3 (THỜI GIAN) ---
+
+  getExtra: (): string[] => getStorage(KEYS.EXTRA),
+
+  addExtra: (item: string) => {
+    const current = getStorage(KEYS.EXTRA);
+    const updated = [...current, item];
+    setStorage(KEYS.EXTRA, updated);
+    return updated;
+  },
+
+  clearExtra: () => {
+    localStorage.removeItem(KEYS.EXTRA);
+  },
+
   // --- TIỆN ÍCH ---
   clearAll: () => {
     localStorage.removeItem(KEYS.OUTER);
     localStorage.removeItem(KEYS.INNER);
+    localStorage.removeItem(KEYS.EXTRA);
   }
 };

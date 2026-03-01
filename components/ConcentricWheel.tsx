@@ -322,8 +322,19 @@ const ConcentricWheel: React.FC<ConcentricWheelProps> = ({
       <div className="absolute top-1/2 right-0 w-[50%] h-[2px] bg-red-500/20 pointer-events-none z-10 origin-right"></div>
 
       {/* Pointer */}
-      <div className="absolute top-1/2 right-0 -translate-y-1/2 z-30 drop-shadow-lg pointer-events-none -mr-1">
-        <div className="w-0 h-0 border-t-[24px] border-t-transparent border-b-[24px] border-b-transparent border-r-[40px] border-r-red-600 filter drop-shadow-md"></div>
+      <div className="absolute top-1/2 right-0 -translate-y-1/2 z-30 drop-shadow-xl pointer-events-none -mr-2">
+        <svg width="60" height="60" viewBox="0 0 40 48" style={{ filter: 'drop-shadow(0px 4px 4px rgba(0,0,0,0.4))' }}>
+            <defs>
+                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#FFF8E1" /> 
+                    <stop offset="20%" stopColor="#FFD700" />
+                    <stop offset="50%" stopColor="#B8860B" />
+                    <stop offset="80%" stopColor="#FFD700" />
+                    <stop offset="100%" stopColor="#FDB931" />
+                </linearGradient>
+            </defs>
+            <path d="M 40 0 L 0 24 L 40 48 Z" fill="url(#goldGradient)" stroke="#8A6E2F" strokeWidth="1.5" />
+        </svg>
       </div>
 
       <svg 

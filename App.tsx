@@ -42,6 +42,7 @@ const App: React.FC = () => {
   // Dữ liệu thực tế nằm trong deletedItemsService
   const [deletedOuter, setDeletedOuter] = useState<string[]>(() => deletedItemsService.getOuter());
   const [deletedInner, setDeletedInner] = useState<string[]>(() => deletedItemsService.getInner());
+  const [deletedExtra, setDeletedExtra] = useState<string[]>(() => deletedItemsService.getExtra());
   
   // Parsed items
   const outerItems: WheelItem[] = useMemo(() => 
@@ -63,7 +64,7 @@ const App: React.FC = () => {
   // Cài đặt
   const [settings, setSettings] = useState<GameSettings>(() => {
     const saved = localStorage.getItem('lucky_settings');
-    const defaults = { removeWinner: false, removeQuestion: false, enableThirdWheel: false, soundEnabled: true };
+    const defaults = { removeWinner: false, removeQuestion: false, removeExtra: false, enableThirdWheel: false, soundEnabled: true };
     if (saved) {
       try { return { ...defaults, ...JSON.parse(saved) }; } catch (e) { return defaults; }
     }
@@ -118,6 +119,19 @@ const App: React.FC = () => {
         const updatedList = deletedItemsService.addInner(result.inner);
         setDeletedInner(updatedList);
       }
+
+      // 3. Xóa thời gian (Vòng 3)
+      if (settings.removeExtra && result.extra && settings.enableThirdWheel) {
+        const newExtraText = extraItems
+          .filter(item => item.text !== result.extra)
+          .map(item => item.text)
+          .join('\n');
+        setExtraText(newExtraText);
+
+        // LƯU VÀO KHO (Service)
+        const updatedList = deletedItemsService.addExtra(result.extra);
+        setDeletedExtra(updatedList);
+      }
     }
     setResult(null);
   };
@@ -127,10 +141,11 @@ const App: React.FC = () => {
     // A. Chế độ KHÔI PHỤC
     const itemsToRestoreOuter = deletedItemsService.getOuter();
     const itemsToRestoreInner = deletedItemsService.getInner();
-    const hasItems = itemsToRestoreOuter.length > 0 || itemsToRestoreInner.length > 0;
+    const itemsToRestoreExtra = deletedItemsService.getExtra();
+    const hasItems = itemsToRestoreOuter.length > 0 || itemsToRestoreInner.length > 0 || itemsToRestoreExtra.length > 0;
 
     if (hasItems) {
-        if (window.confirm(`Bạn có muốn khôi phục ${itemsToRestoreOuter.length + itemsToRestoreInner.length} mục đã bị xóa?`)) {
+        if (window.confirm(`Bạn có muốn khôi phục ${itemsToRestoreOuter.length + itemsToRestoreInner.length + itemsToRestoreExtra.length} mục đã bị xóa?`)) {
             
             if (itemsToRestoreOuter.length > 0) {
                 setOuterText(prev => {
@@ -150,6 +165,15 @@ const App: React.FC = () => {
                 deletedItemsService.clearInner();
                 setDeletedInner([]);
             }
+
+            if (itemsToRestoreExtra.length > 0) {
+                setExtraText(prev => {
+                    const current = prev.trim();
+                    return current ? current + '\n' + itemsToRestoreExtra.join('\n') : itemsToRestoreExtra.join('\n');
+                });
+                deletedItemsService.clearExtra();
+                setDeletedExtra([]);
+            }
             alert("Đã khôi phục thành công!");
         }
         return;
@@ -164,13 +188,14 @@ const App: React.FC = () => {
         deletedItemsService.clearAll();
         setDeletedOuter([]);
         setDeletedInner([]);
+        setDeletedExtra([]);
     }
   };
 
-  const hasDeletedItems = deletedOuter.length > 0 || deletedInner.length > 0;
+  const hasDeletedItems = deletedOuter.length > 0 || deletedInner.length > 0 || deletedExtra.length > 0;
 
   return (
-    <div className="h-screen w-full flex flex-col md:flex-row overflow-hidden bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2029&auto=format&fit=crop')] bg-cover bg-center">
+    <div className="h-screen w-full flex flex-col md:flex-row overflow-hidden bg-gradient-to-br from-red-900 via-red-700 to-red-900">
       <div className="md:hidden p-4 flex justify-between items-center bg-white/90 backdrop-blur-sm shadow-md z-40">
         <h1 className="font-extrabold text-xl text-indigo-700">Vòng Quay Kép</h1>
         <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-md bg-indigo-100 text-indigo-700">

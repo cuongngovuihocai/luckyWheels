@@ -44,6 +44,10 @@ const Controls: React.FC<ControlsProps> = ({
     setSettings(prev => ({ ...prev, removeQuestion: !prev.removeQuestion }));
   };
 
+  const toggleRemoveExtra = () => {
+    setSettings(prev => ({ ...prev, removeExtra: !prev.removeExtra }));
+  };
+
   const toggleThirdWheel = () => {
     setSettings(prev => ({ ...prev, enableThirdWheel: !prev.enableThirdWheel }));
   };
@@ -51,10 +55,14 @@ const Controls: React.FC<ControlsProps> = ({
   return (
     <div className="h-full flex flex-col bg-white shadow-xl rounded-r-none md:rounded-r-3xl p-6 border-l border-gray-100 overflow-y-auto">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-extrabold text-gray-800 flex items-center gap-2">
-          <Settings className="w-6 h-6 text-indigo-600" />
-          Cài Đặt
-        </h1>
+        <div className="flex items-center gap-2">
+            <img 
+                src="https://lh3.googleusercontent.com/d/1oTxhowzJvB_4EvS_mNOD-EWYtdYmptBw" 
+                alt="Logo" 
+                className="max-w-[150px] h-auto object-contain"
+                referrerPolicy="no-referrer"
+            />
+        </div>
         
         <div className="flex gap-2">
             <button 
@@ -89,7 +97,7 @@ const Controls: React.FC<ControlsProps> = ({
         </div>
 
         {/* Outer Input */}
-        <div className="flex flex-col h-[28%]">
+        <div className="flex flex-col h-[20%]">
           <label className="text-sm font-bold text-blue-600 uppercase mb-2 flex items-center justify-between">
             Danh sách Học Sinh
             <span className="text-xs font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{outerText.trim().split('\n').filter(Boolean).length} mục</span>
@@ -103,7 +111,7 @@ const Controls: React.FC<ControlsProps> = ({
         </div>
 
         {/* Inner Input */}
-        <div className="flex flex-col h-[28%]">
+        <div className="flex flex-col h-[20%]">
             <label className="text-sm font-bold text-orange-600 uppercase mb-2 flex items-center justify-between">
             Danh sách Câu hỏi/Quà
             <span className="text-xs font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{innerText.trim().split('\n').filter(Boolean).length} mục</span>
@@ -118,7 +126,7 @@ const Controls: React.FC<ControlsProps> = ({
 
         {/* Extra Input (Conditioned by settings but always rendered for layout stability, maybe hidden visually if needed, but let's keep it visible if toggle is ON) */}
         {settings.enableThirdWheel && setExtraText && (
-            <div className="flex flex-col h-[28%] animate-fade-in">
+            <div className="flex flex-col h-[20%] animate-fade-in">
                 <label className="text-sm font-bold text-emerald-600 uppercase mb-2 flex items-center justify-between">
                 Danh sách Thời gian
                 <span className="text-xs font-normal text-gray-400 bg-gray-100 px-2 py-0.5 rounded">{extraText.trim().split('\n').filter(Boolean).length} mục</span>
@@ -142,6 +150,12 @@ const Controls: React.FC<ControlsProps> = ({
                 <input type="checkbox" checked={settings.removeQuestion} onChange={toggleRemoveQuestion} className="w-4 h-4 text-orange-600 rounded focus:ring-orange-500" />
                 <span className="text-xs font-bold text-gray-600">Xóa quà</span>
             </label>
+            {settings.enableThirdWheel && (
+                <label className="flex items-center gap-2 cursor-pointer bg-gray-50 p-2 rounded-lg border border-gray-100 col-span-2">
+                    <input type="checkbox" checked={settings.removeExtra} onChange={toggleRemoveExtra} className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500" />
+                    <span className="text-xs font-bold text-gray-600">Xóa thời gian</span>
+                </label>
+            )}
         </div>
       </div>
 

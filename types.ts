@@ -6,6 +6,7 @@ export interface WheelItem {
 export interface GameSettings {
   removeWinner: boolean;
   removeQuestion: boolean;
+  removeExtra: boolean; // Mới: Xóa thời gian sau khi quay
   enableThirdWheel: boolean; // Mới: Bật tắt vòng thứ 3
   soundEnabled: boolean;
 }
